@@ -10,25 +10,13 @@ class SSFCM(FCM):
     
     #khởi tạo ma trận U ngang
     def init_U_bar(self,labels):
-         # Xác định các nhãn duy nhất và chuyển nhãn về dạng số 
-        unique_classes, numeric_labels = np.unique(labels, return_inverse=True)
-
-        # Khởi tạo ma trận U_bar có kích thước [N x C] với tất cả giá trị ban đầu là 0
-        num_samples = len(numeric_labels)
-        self.U_bar = np.zeros((num_samples, self.clusters))
-        
-            # Xác định số lượng mẫu được gán nhãn cứng (dựa trên self.per%)
-        num_labeled_samples = int((num_samples * self.per) / 100)
-
-         # Chọn ngẫu nhiên các chỉ số của dữ liệu được gán nhãn cứng
-        labeled_indices = np.random.choice(num_samples,size=num_labeled_samples,replace=False)  # Đảm bảo các chỉ số không trùng lặp)
-
-        # Gán nhãn cứng vào các vị trí được chọn
-        for idx in labeled_indices:
-            cluster_label = labels[idx]  # Lấy nhãn cụm của mẫu
-            self.U_bar[idx, cluster_label] = 1    # Gán nhãn cứng tại vị trí tương ứng
-
-        return self.U_bar
+        #khởi tạo ma trận 0 có kích thước NxC
+        self.U_bar=np.zeros((len(labels),self.clusters))
+        #phần tử có nhãn thì gán giá trị 1
+        for i in range(len(labels)):
+            if labels[i]!=-1:
+                self.U_bar[i][labels[i]]=1
+        return self.U_bar  
     
     #cập nhật tâm cụm
     def calculate_centroid(self,data,U):
